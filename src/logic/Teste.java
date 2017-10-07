@@ -6,6 +6,7 @@ import java.util.ArrayList;
 //import java.util.Date;
 import java.util.List;
 
+import dao.MapDAO;
 import dao.PointDAO;
 import model.Aresta;
 import model.Point;
@@ -13,14 +14,14 @@ import model.Vertice;
 
 public class Teste {
 
-	public static void teste1(){
+	public static void teste1(){ // Teste para PointDAO
 		PointDAO pointdao = new PointDAO();
 		
 //		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 //		Date hora = Calendar.getInstance().getTime(); // Ou qualquer outra forma que tem
 //		String dataFormatada = sdf.format(hora);
 		
-		List<Point> points = pointdao.selectPointByHour(20, 22, "2008-02-02");
+		List<Point> points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-06");
 		
 		for(Point p : points){
 			System.out.println("Taxi id: " + p.taxi_id + "; Longitude: " + p.longitude + "; Latitude: " + p.latitude + "; Student: " + p.studentId);
@@ -29,7 +30,7 @@ public class Teste {
 		System.out.println("Contagem: " + points.size());
 	}
 	
-	public static void teste2(){
+	public static void teste2(){ // Teste para Dijkstra
 		Vertice a = new Vertice(1, 1, 3);
 		Vertice b = new Vertice(2, 3, 4);
 		Vertice c = new Vertice(3, 3, 1);
@@ -58,14 +59,39 @@ public class Teste {
 		Conjunto_Aresta.add(s);
 		Conjunto_Aresta.add(t);
 		
-		
 		Dijkstra dijkstra = new Dijkstra(Conjunto_Vertices, Conjunto_Aresta);
 		System.out.println("Resultado: " + dijkstra.dijkstra(1, 5));
+	}
+	
+	public static void teste3(){ // Teste para MapDAO - select vertices
+		MapDAO map = new MapDAO();
+		
+		List<Vertice> vertices = map.selectAllVertices();
+		
+		for(Vertice v : vertices){
+			System.out.println("Vertice id: " + v.id + "; Longitude: " + v.longitude + "; Latitude: " + v.latitude);
+		}
+		
+		System.out.println("Contagem Vertices: " + vertices.size());
+	}
+	
+	public static void teste4(){ // Teste para MapDAO - select arestas
+		MapDAO map = new MapDAO();
+		
+		List<Aresta> arestas = map.selectAllArestas();
+		
+		for(Aresta a : arestas){
+			System.out.println("Aresta id: " + a.idAresta + "; Vertice Inicio: " + a.verticeInicio + "; Vertice Destino: " + a.verticeDestino + "; Custo: " + a.custo);
+		}
+		
+		System.out.println("Contagem: " + arestas.size());
 	}
 	
 	public static void main(String[] args) {
 //		teste1();
 //		teste2();
+//		teste3();
+//		teste4();
 		
 	}
 }
