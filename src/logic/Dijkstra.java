@@ -12,13 +12,13 @@ import model.Vertice;
 public class Dijkstra {
 	
 	public List<Vertice> Conjunto_Vertices; //V[g]
-	public Map<Integer, Double> distancia; //d[v] - Key = Vertice.id; Value = Distancia do vertice.id até o idInicio
-	private static double infinity = 100;
 	public List<Aresta> Conjunto_Arestas; 
+	public Map<Integer, Double> distancia; //d[v] - Key = Vertice.id; Value = Distancia do vertice.id até o idInicio
+	private static double infinity = 1000000;
 	
-	public Dijkstra(List<Vertice> Conjunto_Vertices, List<Aresta> Conjunto_Aresta) { 
-		this.Conjunto_Vertices = Conjunto_Vertices; // será o dao
-		this.Conjunto_Arestas = Conjunto_Aresta; // será o dao
+	public Dijkstra(List<Vertice> vertices, List<Aresta> arestas) { 
+		this.Conjunto_Vertices = vertices;
+		this.Conjunto_Arestas = arestas;
 		this.distancia = new HashMap<>();
 	}
 	

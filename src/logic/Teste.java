@@ -59,8 +59,8 @@ public class Teste {
 		Conjunto_Aresta.add(s);
 		Conjunto_Aresta.add(t);
 		
-		Dijkstra dijkstra = new Dijkstra(Conjunto_Vertices, Conjunto_Aresta);
-		System.out.println("Resultado: " + dijkstra.dijkstra(1, 5));
+//		Dijkstra dijkstra = new Dijkstra(Conjunto_Vertices, Conjunto_Aresta);
+//		System.out.println("Resultado: " + dijkstra.dijkstra(1, 5));
 	}
 	
 	public static void teste3(){ // Teste para MapDAO - select vertices
