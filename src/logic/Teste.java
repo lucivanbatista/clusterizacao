@@ -87,11 +87,52 @@ public class Teste {
 		System.out.println("Contagem: " + arestas.size());
 	}
 	
+	public static void teste5(){ // Teste para o MapMatching
+		System.out.println("Iniciando Map Matching...");
+		MapMatching mm = new MapMatching();
+		
+		System.out.println("Iniciando PointDAO...");
+		PointDAO pointdao = new PointDAO();
+//		List<Point> points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-06");
+		System.out.println("Armazenando os Pontos...");
+		List<Point> points = pointdao.selectAllPointsByDate("2008-02-02");
+		System.out.println("Pontos armazenados!");
+		List<Point> newPoints = mm.runMapMatching(points);
+		mm.exportarCSV("points_date_02", newPoints);
+	}
+	
+	public static void teste6(){ // Teste para o MapMatching
+		System.out.println("Iniciando Map Matching...");
+		MapMatching mm = new MapMatching();
+		
+		System.out.println("Iniciando PointDAO...");
+		PointDAO pointdao = new PointDAO();
+		
+		System.out.println("Armazenando os Pontos do dia 03...");
+		List<Point> points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-03");
+		System.out.println("Pontos armazenados!");
+		List<Point> newPoints = mm.runMapMatching(points);
+		mm.exportarCSV("points_date_03", newPoints);
+		
+		System.out.println("Armazenando os Pontos do dia 04...");
+		points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-04");
+		System.out.println("Pontos armazenados!");
+		newPoints = mm.runMapMatching(points);
+		mm.exportarCSV("points_date_04", newPoints);
+		
+		System.out.println("Armazenando os Pontos do dia 05...");
+		points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-05");
+		System.out.println("Pontos armazenados!");
+		newPoints = mm.runMapMatching(points);
+		mm.exportarCSV("points_date_05", newPoints);
+	}
+	
 	public static void main(String[] args) {
 //		teste1();
 //		teste2();
 //		teste3();
 //		teste4();
-		
+//		teste5();
+		teste6();
 	}
 }

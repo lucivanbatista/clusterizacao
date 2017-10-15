@@ -1,5 +1,6 @@
 package logic;
 
+import java.io.PrintWriter;
 import java.util.List;
 
 import dao.MapDAO;
@@ -15,12 +16,17 @@ public class MapMatching {
 	public MapMatching() {
 		this.mapdao = new MapDAO();
 		this.vertices = mapdao.selectAllVertices();
+		this.euclidiana = new Euclidiana();
 	}
 	
-	public void runMapMatching(List<Point> points){ // Para cada ponto, irei colocá-lo na rede
+	public List<Point> runMapMatching(List<Point> points){ // Para cada ponto, irei colocá-lo na rede
+		System.out.println("Iniciando Map Matching...");
+		System.out.println("Quantidade de pontos: " + points.size());
 		for(Point p : points){
-			p.idVertice = procurarVerticeMap(p);
+			p.idVertice = procurarVerticeMap(p);			
 		}
+		System.out.println("Finalizado Map Matching!");
+		return points;
 	}
 	
 	public int procurarVerticeMap(Point p){ // Dentro dos vértices, ele irá procurar o vértice mais próximo e irá retornar
@@ -32,6 +38,23 @@ public class MapMatching {
 		}
 		// No final da iteração, teremos que o retorno será o vertice mais proximo, ou seja, teremos colocado o ponto p dentro da nossa rede
 		return vProximo.id;
+	}
+	
+	public void exportarCSV(String fileName, List<Point> list){
+		try{
+			PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+			
+			writer.println("student_id;id_taxista;longitude;latitude;id_vertice");
+			System.out.println("Exportando arquivo com Map Matching...");
+			for (Point p : list) {
+				writer.println(p.studentId+";"+p.taxi_id+";"+p.longitude+";"+p.latitude+";"+p.idVertice);
+			}
+			System.out.println("Arquivo Exportado com Sucesso!");
+			
+			writer.close();
+		}catch (Exception e) {
+			System.out.println("[ERROR]: "+e.toString());
+		}
 	}
 	
 }
