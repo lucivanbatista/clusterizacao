@@ -24,7 +24,7 @@ public class PointDAO {
 //		String sql = "SELECT * FROM pteste WHERE date_part('hour', tempo) >= " + hourBegin + " AND date_part('hour', tempo) < " + hourEnd + " AND date = '" + data + "'";
 		
 		
-		String sql = "SELECT * FROM points WHERE date_time BETWEEN '" + data + " " + hourBegin + "' AND  '" + data + " " + hourEnd + "'";
+		String sql = "SELECT * FROM points_old WHERE date_time BETWEEN '" + data + " " + hourBegin + "' AND  '" + data + " " + hourEnd + "'";
 		
 		try {
 			ArrayList<Point> points = new ArrayList<>();
@@ -48,7 +48,7 @@ public class PointDAO {
 	}
 	
 	public List<Point> selectAllPointsByDate(String date){
-		String sql = "SELECT * FROM points where date = '" + date + "'";
+		String sql = "SELECT * FROM points_old where date = '" + date + "'";
 		
 		try {
 			ArrayList<Point> points = new ArrayList<>();

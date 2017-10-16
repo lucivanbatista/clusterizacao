@@ -108,11 +108,11 @@ public class Teste {
 		System.out.println("Iniciando PointDAO...");
 		PointDAO pointdao = new PointDAO();
 		
-		System.out.println("Armazenando os Pontos do dia 03...");
-		List<Point> points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-03");
+		System.out.println("Armazenando os Pontos do dia 06...");
+		List<Point> points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-06");
 		System.out.println("Pontos armazenados!");
 		List<Point> newPoints = mm.runMapMatching(points);
-		mm.exportarCSV("points_date_03", newPoints);
+		mm.exportarCSV("points_date_06", newPoints);
 		
 		System.out.println("Armazenando os Pontos do dia 04...");
 		points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-04");
@@ -126,13 +126,31 @@ public class Teste {
 		newPoints = mm.runMapMatching(points);
 		mm.exportarCSV("points_date_05", newPoints);
 	}
-	
+
+	public static void teste7(){
+		System.out.println("Iniciando Map Matching...");
+		MapMatching mm = new MapMatching();
+		
+		System.out.println("Iniciando PointDAO...");
+		PointDAO pointdao = new PointDAO();
+
+		System.out.println("Pontos armazenados!");
+		List<Point> points = pointdao.selectPointByHour("20:00:00", "21:00:00", "2008-02-04");
+		List<Point> newPoints = mm.runMapMatching(points);
+		
+		Clusterizacao clusterizar = new Clusterizacao();
+		int minPoints = 5;
+		int eps = 5;
+		List<Point> newPointsCluster = clusterizar.DBScan(minPoints, eps, newPoints);
+		clusterizar.exportarCSV("clusterizado", newPointsCluster);
+	}
 	public static void main(String[] args) {
 //		teste1();
 //		teste2();
 //		teste3();
 //		teste4();
 //		teste5();
-		teste6();
+//		teste6();
+		teste7();
 	}
 }
