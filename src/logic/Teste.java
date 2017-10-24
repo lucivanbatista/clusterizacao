@@ -21,10 +21,10 @@ public class Teste {
 //		Date hora = Calendar.getInstance().getTime(); // Ou qualquer outra forma que tem
 //		String dataFormatada = sdf.format(hora);
 		
-		List<Point> points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-06");
+		List<Point> points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-06", 3);
 		
 		for(Point p : points){
-			System.out.println("Taxi id: " + p.taxi_id + "; Longitude: " + p.longitude + "; Latitude: " + p.latitude + "; Student: " + p.studentId);
+			System.out.println("Taxi id: " + p.taxi_id + "; Longitude: " + p.longitude + "; Latitude: " + p.latitude + "; Id Ponto: " + p.id_ponto + "; Student: " + p.studentId);
 		}
 		
 		System.out.println("Contagem: " + points.size());
@@ -93,9 +93,9 @@ public class Teste {
 		
 		System.out.println("Iniciando PointDAO...");
 		PointDAO pointdao = new PointDAO();
-//		List<Point> points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-06");
+		List<Point> points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-06", 1);
 		System.out.println("Armazenando os Pontos...");
-		List<Point> points = pointdao.selectAllPointsByDate("2008-02-02");
+//		List<Point> points = pointdao.selectAllPointsByDate("2008-02-02");
 		System.out.println("Pontos armazenados!");
 		List<Point> newPoints = mm.runMapMatching(points);
 		mm.exportarCSV("points_date_02", newPoints);
@@ -109,41 +109,59 @@ public class Teste {
 		PointDAO pointdao = new PointDAO();
 		
 		System.out.println("Armazenando os Pontos do dia 06...");
-		List<Point> points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-06");
+		List<Point> points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-06", 3);
 		System.out.println("Pontos armazenados!");
 		List<Point> newPoints = mm.runMapMatching(points);
 		mm.exportarCSV("points_date_06", newPoints);
 		
 		System.out.println("Armazenando os Pontos do dia 04...");
-		points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-04");
+		points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-04", 1);
 		System.out.println("Pontos armazenados!");
 		newPoints = mm.runMapMatching(points);
 		mm.exportarCSV("points_date_04", newPoints);
 		
 		System.out.println("Armazenando os Pontos do dia 05...");
-		points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-05");
+		points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-05", 2);
 		System.out.println("Pontos armazenados!");
 		newPoints = mm.runMapMatching(points);
 		mm.exportarCSV("points_date_05", newPoints);
 	}
 
 	public static void teste7(){
-		System.out.println("Iniciando Map Matching...");
+		System.out.println("Inicializando Map Matching...");
 		MapMatching mm = new MapMatching();
 		
 		System.out.println("Iniciando PointDAO...");
 		PointDAO pointdao = new PointDAO();
 
 		System.out.println("Pontos armazenados!");
-		List<Point> points = pointdao.selectPointByHour("20:00:00", "21:00:00", "2008-02-04");
+		List<Point> points = pointdao.selectPointByHour("20:00:00", "20:02:00", "2008-02-04", 1);
+//		List<Point> points = pointdao.selectPointByHour("20:00:00", "20:02:00", "2008-02-05", 2);
 		List<Point> newPoints = mm.runMapMatching(points);
 		
 		Clusterizacao clusterizar = new Clusterizacao();
-		int minPoints = 5;
-		int eps = 5;
+		int minPoints = 3;
+		double eps = 0.05;
+		//clusterizado 2 = 5 e 0.003
+		//clusterizado 1 = 3 e 0.005
+		//clusterizado 3 = 3 e 0.01
+		//clusterizado 4 = 3 e 0.05
 		List<Point> newPointsCluster = clusterizar.DBScan(minPoints, eps, newPoints);
-		clusterizar.exportarCSV("clusterizado", newPointsCluster);
+		clusterizar.exportarCSV("clusterizado4", newPointsCluster);
 	}
+	
+	public static void teste8(){
+//		System.out.println("Iniciando Map Matching...");
+//		MapMatching mm = new MapMatching();
+//		
+//		System.out.println("Iniciando PointDAO...");
+//		PointDAO pointdao = new PointDAO();
+//		
+//		List<Point> points = pointdao.selectAllPointsByDate("2008-02-04");
+//		List<Point> newPoints = mm.runMapMatching(points);
+//		mm.exportarCSV("mapMatchingDia4", newPoints);
+	}
+		
 	public static void main(String[] args) {
 //		teste1();
 //		teste2();
@@ -152,5 +170,6 @@ public class Teste {
 //		teste5();
 //		teste6();
 		teste7();
+//		teste8();
 	}
 }

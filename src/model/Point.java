@@ -14,9 +14,20 @@ public class Point {
 	public boolean visitado; // DBSCAN sempre verifica os pontos não visitados, começaremos com false
 	public int type; // Core point, border point ou outlier
 	public int weekday; // Dia da semana (1 - Segunda, ..., 5 - Sexta)
+	public int id_ponto; // Serial
 	
 	//Aqui é o seguinte, após termos usado o map-matching, esse idVertex irá representar sobre qual vértice o meu ponto do taxi estará
 	public int idVertice;
+	public double idVerticeLongitude;
+	public double idVerticeLatitude;
+	
+	public Point(int taxi_id, double longitude, double latitude, int id_ponto) {
+		this.taxi_id = taxi_id;
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.id_ponto = id_ponto;
+		this.visitado = false;
+	}
 	
 	public Point(int taxi_id, double longitude, double latitude) {
 		this.taxi_id = taxi_id;

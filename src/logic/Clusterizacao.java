@@ -2,7 +2,10 @@ package logic;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import dao.MapDAO;
 import model.Aresta;
@@ -16,6 +19,7 @@ public class Clusterizacao {
 	public MapDAO mapdao;
 	public List<Vertice> vertices;
 	public List<Aresta> arestas;
+	public HashMap<Integer, Point> pontos_visitados = new HashMap<>(); // Chave = Id_Ponto
 	
 	public Dijkstra dijkstra;
 	public Euclidiana euclidiana;
@@ -31,16 +35,16 @@ public class Clusterizacao {
 	public List<Point> DBScan(int minPoints, double eps, List<Point> pontos){
 		this.points = pontos;
 		int clusterId = 0;
-		System.out.println("Quantidade dos Pontos: " + pontos.size());
-		
-		for(Point point : pontos){
+		System.out.println("Quantidade dos Pontos: " + this.points.size());
+		int contador = 0;
+		for(Point point : this.points){
 			if(point.visitado == false){ // Se ponto não foi visitado, então
 				point.visitado = true; // Não irei mais visitar ele
 				
 				List<Point> vizinhos = getVizinhos(eps, minPoints, point); // Pegar os vizinhos deste ponto
-				List<Point> vizinhos_taxis = getVizinhosTaxis(vizinhos); // Pegar os vizinhos taxistas distintos deste ponto
-				
-				int countVizinhos = vizinhos_taxis.size();
+				int countVizinhos = getVizinhosTaxis(vizinhos, point);
+				System.out.println("Quantidade de Viznhos do " + contador + " : " + countVizinhos);
+				contador++;
 				
 				if(minPoints > countVizinhos){ // Se o minPoints for maior que os meus vizinhos, então ele será um outlier
 					point.cluster = Point.OUTLIER;
@@ -60,70 +64,55 @@ public class Clusterizacao {
 	public void expandirCluster(List<Point> vizinhos, int clusterId, int minPoints, double eps){ // Iremos descobrir até onde o cluster irá
 		System.out.println("Estamos expandindo o cluster " + clusterId);
 		
-		for(Point p : vizinhos){ // Primeiro associamos os cluster vizinhos ao mesmo cluster do core
-			p.cluster = clusterId;
-		}
-		
 		while(vizinhos.size() > 0){ // Temos que fazer para todos os vizinhos
 			Point point = vizinhos.get(0); // Pegaremos o primeiro vizinho da lista
+			point.cluster = clusterId;
 			vizinhos.remove(0); // Não usaremos mais ele, então iremos o remover da lista
 			
 			if(point.visitado == false){ // Se ponto não foi visitado, então
 				point.visitado = true; // Não irei mais visitar ele
 				
 				List<Point> vizinhosDestePonto = getVizinhos(eps, minPoints, point); // Pegar os vizinhos deste ponto
-				List<Point> vizinhosDestePonto_taxis = getVizinhosTaxis(vizinhos); // Pegar os vizinhos taxistas distintos deste ponto
-				
-				int countVizinhosDestePonto = vizinhosDestePonto_taxis.size();
-				
-				
-				for (Point p : vizinhosDestePonto) { // Os vizinhos deste ponto também irão pertencer ao cluster
-					p.cluster = clusterId;
-				}
+				int countVizinhosDestePonto = getVizinhosTaxis(vizinhosDestePonto, point);
+				System.out.println("Quantidade de Viznhos 2: " + countVizinhosDestePonto);
 				
 				if(minPoints > countVizinhosDestePonto){ // Ele não será um outlier, mas sim um border
 					point.type = Point.BORDER_POINT;
 				}else{
 					point.type = Point.CORE_POINT;
-					vizinhos.addAll(vizinhosDestePonto); // Adicionaremos a nossa lista de vizinhos, os vizinhosDestePonto para ele também ser percorrido
+					vizinhos.addAll(0, vizinhosDestePonto); // Adicionaremos a nossa lista de vizinhos, os vizinhosDestePonto para ele também ser percorrido
 				}	
 			}
-		}
-		
+		}		
 	}
 	
 	// Pegar os vizinhos de um determinado ponto
 	public List<Point> getVizinhos(double eps, int minPoints, Point p){
 		List<Point> vizinhos = new ArrayList<>();
 		for(Point ponto : this.points){
-			double d = this.dijkstra.dijkstra(p.idVertice, ponto.idVertice); // Distancia usando o dijstra
-//			double d2 = this.euclidiana.dEuclidiana(p, ponto); // Distancia usando o euclidiana
-			if(eps > d){ // Caso o raio for maior que a distancia, então quer dizer que esse 'ponto' está dentro do range e será adicionado como vizinho
-				vizinhos.add(ponto);
+			double d2 = this.euclidiana.dEuclidiana(p, ponto); // Distancia usando o euclidiana
+			if(eps >= d2){ // se d2 > eps não é vizinho
+				double d = this.dijkstra.dijkstra(p.idVertice, ponto.idVertice); // Distancia usando o dijstra
+				if(eps >= d){ // Caso o raio for maior que a distancia, então quer dizer que esse 'ponto' está dentro do range e será adicionado como vizinho
+					if(!pontos_visitados.containsKey(ponto.id_ponto)){
+						this.pontos_visitados.put(ponto.id_ponto, ponto);
+						vizinhos.add(ponto);
+					}
+				}
 			}
 		}
 		return vizinhos;
 	}
 	
-	// Pegar os vizinhos taxistas (distintos)
-	public List<Point> getVizinhosTaxis(List<Point> vizinhos){
-		ArrayList<Point> vizinhos_taxis = new ArrayList<Point>();
+	public int getVizinhosTaxis(List<Point> vizinhos, Point p){
+		Set<Integer> vizinhos_taxis = new HashSet<Integer>();
 		for (Point point : vizinhos) { // Para cada ponto nos vizinhos, então irei analisar
-			if(contains(vizinhos_taxis, point) == false){ // se na nova lista de vizinhos_taxis, o taxi deste ponto está na nova lista?
-				vizinhos_taxis.add(point); // se não estiver (false), então irei adicionar
-			}
-		} // FUTURO: PODERIA USAR UM SET E JOGAR TODOS OS ID DOS TAXISTAS PARA ELE
-		return vizinhos_taxis;
-	}
-	
-	public boolean contains(ArrayList<Point> vizinhos_taxis, Point p){ // Função criada para ...
-		for (Point point : vizinhos_taxis) { // Para cada ponto na nova lista vizinhos_taxis
-			if(point.taxi_id == p.taxi_id){ // Se id do taxi do ponto dentro da nova lista == id do ponto do taxi passado por parametro 
-				return true; // não será adicionado, pois já existe
+			if(point.taxi_id != p.taxi_id){
+				vizinhos_taxis.add(point.taxi_id);
 			}
 		}
-		return false; // será adicionado a lista de vizinhos_taxis
-	}	
+		return vizinhos_taxis.size();
+	}
 	
 	public void exportarCSV(String fileName, List<Point> list){
 		try{

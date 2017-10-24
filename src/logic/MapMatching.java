@@ -23,13 +23,17 @@ public class MapMatching {
 		System.out.println("Iniciando Map Matching...");
 		System.out.println("Quantidade de pontos: " + points.size());
 		for(Point p : points){
-			p.idVertice = procurarVerticeMap(p);			
+			Vertice v = procurarVerticeMap(p);
+			p.idVertice = v.id;
+			p.idVerticeLatitude = v.latitude;
+			p.idVerticeLongitude = v.longitude;
+//			p.idVertice = procurarVerticeMap(p);			
 		}
 		System.out.println("Finalizado Map Matching!");
 		return points;
 	}
 	
-	public int procurarVerticeMap(Point p){ // Dentro dos vértices, ele irá procurar o vértice mais próximo e irá retornar
+	public Vertice procurarVerticeMap(Point p){ // Dentro dos vértices, ele irá procurar o vértice mais próximo e irá retornar
 		Vertice vProximo = this.vertices.get(0); // Esse vértice ficará sendo trocado para o vértice mais próximo (Map Matching)
 		for(Vertice v : this.vertices){
 			if(euclidiana.dEuclidiana(p, new Point(0, vProximo.longitude, vProximo.latitude)) > euclidiana.dEuclidiana(p, new Point(0, v.longitude, v.latitude))){
@@ -37,17 +41,17 @@ public class MapMatching {
 			}
 		}
 		// No final da iteração, teremos que o retorno será o vertice mais proximo, ou seja, teremos colocado o ponto p dentro da nossa rede
-		return vProximo.id;
+		return vProximo;
 	}
 	
 	public void exportarCSV(String fileName, List<Point> list){
 		try{
 			PrintWriter writer = new PrintWriter(fileName, "UTF-8");
 			
-			writer.println("student_id;id_taxista;longitude;latitude;id_vertice");
+			writer.println("student_id;id_taxista;longitude;latitude;id_vertice;id_ponto");
 			System.out.println("Exportando arquivo com Map Matching...");
 			for (Point p : list) {
-				writer.println(p.studentId+";"+p.taxi_id+";"+p.longitude+";"+p.latitude+";"+p.idVertice);
+				writer.println(p.studentId+";"+p.taxi_id+";"+p.longitude+";"+p.latitude+";"+p.idVertice+";"+p.id_ponto);
 			}
 			System.out.println("Arquivo Exportado com Sucesso!");
 			
