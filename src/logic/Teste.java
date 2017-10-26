@@ -135,19 +135,20 @@ public class Teste {
 		PointDAO pointdao = new PointDAO();
 
 		System.out.println("Pontos armazenados!");
-		List<Point> points = pointdao.selectPointByHour("20:00:00", "20:02:00", "2008-02-04", 1);
-//		List<Point> points = pointdao.selectPointByHour("20:00:00", "20:02:00", "2008-02-05", 2);
+//		List<Point> points = pointdao.selectPointByHour("15:00:00", "15:02:00", "2008-02-04", 1);
+		List<Point> points = pointdao.selectPointByHour("20:00:00", "20:30:00", "2008-02-04", 1);
 		List<Point> newPoints = mm.runMapMatching(points);
 		
 		Clusterizacao clusterizar = new Clusterizacao();
-		int minPoints = 3;
-		double eps = 0.05;
-		//clusterizado 2 = 5 e 0.003
-		//clusterizado 1 = 3 e 0.005
-		//clusterizado 3 = 3 e 0.01
-		//clusterizado 4 = 3 e 0.05
+		int minPoints = 10;
+		double eps = 0.005;
+//		int minPoints = 3;
+//		double eps = 0.05;
+		//x = 10 e 0.05
+		//y = 8 e 0.08
+		//z = 8 e 0.5
 		List<Point> newPointsCluster = clusterizar.DBScan(minPoints, eps, newPoints);
-		clusterizar.exportarCSV("clusterizado4", newPointsCluster);
+		clusterizar.exportarCSV("clusterizado_day_1", newPointsCluster);
 	}
 	
 	public static void teste8(){

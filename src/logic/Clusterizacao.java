@@ -3,9 +3,7 @@ package logic;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import dao.MapDAO;
 import model.Aresta;
@@ -36,15 +34,12 @@ public class Clusterizacao {
 		this.points = pontos;
 		int clusterId = 0;
 		System.out.println("Quantidade dos Pontos: " + this.points.size());
-		int contador = 0;
 		for(Point point : this.points){
 			if(point.visitado == false){ // Se ponto não foi visitado, então
 				point.visitado = true; // Não irei mais visitar ele
 				
-				List<Point> vizinhos = getVizinhos(eps, minPoints, point); // Pegar os vizinhos deste ponto
-				int countVizinhos = getVizinhosTaxis(vizinhos, point);
-				System.out.println("Quantidade de Viznhos do " + contador + " : " + countVizinhos);
-				contador++;
+				List<Point> vizinhos = getVizinhos(eps, point); // Pegar os vizinhos deste ponto
+				int countVizinhos = vizinhos.size();
 				
 				if(minPoints > countVizinhos){ // Se o minPoints for maior que os meus vizinhos, então ele será um outlier
 					point.cluster = Point.OUTLIER;
@@ -55,6 +50,7 @@ public class Clusterizacao {
 					point.type = Point.CORE_POINT;// Ele será um centro
 					expandirCluster(vizinhos, clusterId, minPoints, eps);
 				}
+				System.out.println("Quantidade de Vizinhos: " + countVizinhos);
 			}
 		}
 		System.out.println("Quantidade de Clusters criados: " + clusterId);
@@ -72,9 +68,8 @@ public class Clusterizacao {
 			if(point.visitado == false){ // Se ponto não foi visitado, então
 				point.visitado = true; // Não irei mais visitar ele
 				
-				List<Point> vizinhosDestePonto = getVizinhos(eps, minPoints, point); // Pegar os vizinhos deste ponto
-				int countVizinhosDestePonto = getVizinhosTaxis(vizinhosDestePonto, point);
-				System.out.println("Quantidade de Viznhos 2: " + countVizinhosDestePonto);
+				List<Point> vizinhosDestePonto = getVizinhos(eps, point); // Pegar os vizinhos deste ponto
+				int countVizinhosDestePonto = vizinhos.size();
 				
 				if(minPoints > countVizinhosDestePonto){ // Ele não será um outlier, mas sim um border
 					point.type = Point.BORDER_POINT;
@@ -87,7 +82,7 @@ public class Clusterizacao {
 	}
 	
 	// Pegar os vizinhos de um determinado ponto
-	public List<Point> getVizinhos(double eps, int minPoints, Point p){
+	public List<Point> getVizinhos(double eps, Point p){
 		List<Point> vizinhos = new ArrayList<>();
 		for(Point ponto : this.points){
 			double d2 = this.euclidiana.dEuclidiana(p, ponto); // Distancia usando o euclidiana
@@ -104,15 +99,15 @@ public class Clusterizacao {
 		return vizinhos;
 	}
 	
-	public int getVizinhosTaxis(List<Point> vizinhos, Point p){
-		Set<Integer> vizinhos_taxis = new HashSet<Integer>();
-		for (Point point : vizinhos) { // Para cada ponto nos vizinhos, então irei analisar
-			if(point.taxi_id != p.taxi_id){
-				vizinhos_taxis.add(point.taxi_id);
-			}
-		}
-		return vizinhos_taxis.size();
-	}
+//	public int getVizinhosTaxis(List<Point> vizinhos, Point p){
+//		Set<Integer> vizinhos_taxis = new HashSet<Integer>();
+//		for (Point point : vizinhos) { // Para cada ponto nos vizinhos, então irei analisar
+//			if(point.taxi_id != p.taxi_id){
+//				vizinhos_taxis.add(point.taxi_id);
+//			}
+//		}
+//		return vizinhos_taxis.size();
+//	}
 	
 	public void exportarCSV(String fileName, List<Point> list){
 		try{
