@@ -50,7 +50,6 @@ public class Clusterizacao {
 					point.type = Point.CORE_POINT;// Ele será um centro
 					expandirCluster(vizinhos, clusterId, minPoints, eps);
 				}
-				System.out.println("Quantidade de Vizinhos: " + countVizinhos);
 			}
 		}
 		System.out.println("Quantidade de Clusters criados: " + clusterId);
@@ -112,10 +111,10 @@ public class Clusterizacao {
 	public void exportarCSV(String fileName, List<Point> list){
 		try{
 			PrintWriter writer = new PrintWriter(fileName, "UTF-8");
-			writer.println("student_id;taxi_id;weekday;longitude;latitude;cluster;iscore;id_vertice");
+			writer.println("student_id;taxi_id;weekday;longitude;latitude;cluster;iscore;id_vertice;longitude_vertice;latitude_vertice");
 			System.out.println("Exportando arquivo com Clusters ...");
 			for (Point p : list) {
-				writer.println(p.studentId+";"+p.taxi_id+";"+p.weekday+";"+p.longitude+";"+p.latitude+";"+p.cluster+";"+p.type+";"+p.idVertice);
+				writer.println(p.studentId+";"+p.taxi_id+";"+p.weekday+";"+p.longitude+";"+p.latitude+";"+p.cluster+";"+p.type+";"+p.idVertice+";"+p.idVerticeLongitude+";"+p.idVerticeLatitude);
 			}
 			System.out.println("Arquivo Exportado com sucesso!");
 			

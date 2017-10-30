@@ -14,21 +14,7 @@ import model.Vertice;
 
 public class Teste {
 
-	public static void teste1(){ // Teste para PointDAO
-		PointDAO pointdao = new PointDAO();
-		
-//		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-//		Date hora = Calendar.getInstance().getTime(); // Ou qualquer outra forma que tem
-//		String dataFormatada = sdf.format(hora);
-		
-		List<Point> points = pointdao.selectPointByHour("20:00:00", "22:00:00", "2008-02-06", 3);
-		
-		for(Point p : points){
-			System.out.println("Taxi id: " + p.taxi_id + "; Longitude: " + p.longitude + "; Latitude: " + p.latitude + "; Id Ponto: " + p.id_ponto + "; Student: " + p.studentId);
-		}
-		
-		System.out.println("Contagem: " + points.size());
-	}
+	public static void teste1(){}
 	
 	public static void teste2(){ // Teste para Dijkstra
 		Vertice a = new Vertice(1, 1, 3);
@@ -136,31 +122,32 @@ public class Teste {
 
 		System.out.println("Pontos armazenados!");
 //		List<Point> points = pointdao.selectPointByHour("15:00:00", "15:02:00", "2008-02-04", 1);
+		
 		List<Point> points = pointdao.selectPointByHour("20:00:00", "20:30:00", "2008-02-04", 1);
 		List<Point> newPoints = mm.runMapMatching(points);
 		
 		Clusterizacao clusterizar = new Clusterizacao();
-		int minPoints = 10;
-		double eps = 0.005;
+		int minPoints = 80;
+		double eps = 0.01;
 //		int minPoints = 3;
 //		double eps = 0.05;
-		//x = 10 e 0.05
-		//y = 8 e 0.08
-		//z = 8 e 0.5
+		//clusterizado_day_1 = 10 e 0.005
+		//clusterizado_day_11 = 10 e 0.01
 		List<Point> newPointsCluster = clusterizar.DBScan(minPoints, eps, newPoints);
-		clusterizar.exportarCSV("clusterizado_day_1", newPointsCluster);
+		clusterizar.exportarCSV("clusterizado_day_111", newPointsCluster);
 	}
 	
 	public static void teste8(){
-//		System.out.println("Iniciando Map Matching...");
-//		MapMatching mm = new MapMatching();
-//		
-//		System.out.println("Iniciando PointDAO...");
-//		PointDAO pointdao = new PointDAO();
-//		
+		System.out.println("Iniciando Map Matching...");
+		MapMatching mm = new MapMatching();
+		
+		System.out.println("Iniciando PointDAO...");
+		PointDAO pointdao = new PointDAO();
+		
 //		List<Point> points = pointdao.selectAllPointsByDate("2008-02-04");
-//		List<Point> newPoints = mm.runMapMatching(points);
-//		mm.exportarCSV("mapMatchingDia4", newPoints);
+		List<Point> points = pointdao.selectPointByHour("20:00:00", "20:30:00", "2008-02-05", 2);
+		List<Point> newPoints = mm.runMapMatching(points);
+		mm.exportarCSV("mapMatchingDia5", newPoints);
 	}
 		
 	public static void main(String[] args) {

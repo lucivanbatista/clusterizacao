@@ -36,7 +36,7 @@ public class MapMatching {
 	public Vertice procurarVerticeMap(Point p){ // Dentro dos vértices, ele irá procurar o vértice mais próximo e irá retornar
 		Vertice vProximo = this.vertices.get(0); // Esse vértice ficará sendo trocado para o vértice mais próximo (Map Matching)
 		for(Vertice v : this.vertices){
-			if(euclidiana.dEuclidiana(p, new Point(0, vProximo.longitude, vProximo.latitude)) > euclidiana.dEuclidiana(p, new Point(0, v.longitude, v.latitude))){
+			if(euclidiana.dEuclidiana(p, new Point(vProximo.id, vProximo.longitude, vProximo.latitude)) > euclidiana.dEuclidiana(p, new Point(v.id, v.longitude, v.latitude))){
 				vProximo = v; // Se o meu vertice mais próximo for maior que a distancia euclidiana do v, então o v será meu vertice mais proximo
 			}
 		}
@@ -51,7 +51,8 @@ public class MapMatching {
 			writer.println("student_id;id_taxista;longitude;latitude;id_vertice;id_ponto");
 			System.out.println("Exportando arquivo com Map Matching...");
 			for (Point p : list) {
-				writer.println(p.studentId+";"+p.taxi_id+";"+p.longitude+";"+p.latitude+";"+p.idVertice+";"+p.id_ponto);
+				writer.println(p.studentId+";"+p.taxi_id+";"+p.idVerticeLongitude+";"+p.idVerticeLatitude+";"+p.idVertice+";"+p.id_ponto);
+//				writer.println(p.studentId+";"+p.taxi_id+";"+p.longitude+";"+p.latitude+";"+p.idVertice+";"+p.id_ponto);
 			}
 			System.out.println("Arquivo Exportado com Sucesso!");
 			
